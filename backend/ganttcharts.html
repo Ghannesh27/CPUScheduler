@@ -94,35 +94,10 @@
 
 
 <body>
-
-  <nav style="background-color: #151D3B;" class="navStyle">
-    <a href="./index.html" style="color: #fff;">OS LAB</a>
-    <div class="nav-links" id="navLinks">
-      <i class="fas fa-window-close" onclick="hideMenu()"></i>
-      <ul>
-        <li><a href="../index.html">HOME</a></li>
-        <li><a href="../docs.html">DOCS</a></li>
-        <!-- <li><a href="blog.html">BLOG</a></li> -->
-        <li><a href="ganttcharts.html">SIMULATOR</a></li>
-        <li><a href="../about.html">ABOUT</a></li>
-
-      </ul>
-    </div>
-    <i class="fas fa-bars" onclick="showMenu()"></i>
-  </nav>
-
-
   <div class="container">
-
-
-
     <h2 style="text-align: center;">CPU&nbsp;scheduler</h2>
     <p id="adj_counter" style="text-align: center;" class="lead">Type values into the table and the chart on the bottom
       will show how this runs</p>
-
-
-
-
     <table class="table table-bordered table-condensed" id="inputTable">
       <thead>
         <tr>
@@ -208,10 +183,6 @@
 
 
     <br>
-
-
-
-
 
     <div class="well">
 
@@ -361,18 +332,17 @@
 
     </table>
 
-
-
-
-    <div class="datavisulization">
-    <h2 style="text-align: center; margin-bottom: 40px;">Data Visulization</h2>
-
-
-    <!-- <div class="barChart">
-      <canvas id="myBarChart"></canvas>
-    </div> -->
-
     <hr>
+    <span style="font-size: large; color: rgb(3, 27, 94);">CPU Utilization:
+      <div id="utilization" style="color:rgba(255, 26, 104, 1);"></div>
+    </span>
+    <span style="font-size: large; color: rgb(3, 27, 94);">Average waiting time:
+      <div id="avgwt" style="color:rgba(255, 26, 104, 1);"></div>
+    </span>
+    <span style="font-size: large; color: rgb(3, 27, 94);">Average turn around time:
+      <div id="avgtat" style="color:rgba(255, 26, 104, 1);"></div>
+    </span>
+    
     <div class="pie" id="chartdiv">
       <div class="first">
         <div class="chartMenu">
@@ -381,7 +351,6 @@
         <div class="chartCard">
           <div class="chartBox">
             <canvas id="myChart" width="400" height="400"></canvas>
-            <!-- <canvas id="myChart"></canvas> -->
           </div>
         </div>
 
@@ -403,25 +372,9 @@
   </div>
 
 
-    <span style="font-size: large; color: rgb(3, 27, 94);">CPU Utilization:
-      <div id="utilization" style="color:rgba(255, 26, 104, 1);"></div>
-    </span>
-    <span style="font-size: large; color: rgb(3, 27, 94);">Average waiting time:
-      <div id="avgwt" style="color:rgba(255, 26, 104, 1);"></div>
-    </span>
-    <span style="font-size: large; color: rgb(3, 27, 94);">Average turn around time:
-      <div id="avgtat" style="color:rgba(255, 26, 104, 1);"></div>
-    </span>
 
-    <button id="explanation">Show Explanation</button>
-  
 
-      <div class="explain container_docs" id="ex">
-        <h1>Algorithm Explanation</h1>
-        <p style="color: #FD5D5D; font-size: large;">User Input :</p>
-        <p id="input"></p>
-        <p id="steps"></p>
-      </div>
+
 
   </div><!-- /containter -->
   
