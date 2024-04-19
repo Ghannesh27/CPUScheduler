@@ -166,7 +166,6 @@ $(document).ready(function () {
 		this.addItem = function (name, progressLength) {
 			var previousName = this.names[this.names.length - 1];
 
-			//if the process being added is the same as the current one, combine them
 			if (this.names.length > 0 && previousName == name) {
 				this.indexes[this.indexes.length - 1] += progressLength;
 				this.sum += progressLength;
@@ -241,7 +240,6 @@ $(document).ready(function () {
 
 			fullExplanation += '}{' + processArray.length + '} $</span> $ = ' + averageWait + ' $';
 
-			//set the equation text
 			$("#explanation-equation").html(fullExplanation);
 
 			mainOutput.waitingTime = waitTimes;
@@ -257,13 +255,7 @@ $(document).ready(function () {
 			// }
 			// console.log(waitTimes);
 			// console.log(processArray[0].finishTime)
-			// console.log(processArray[1].finishTime)
-			// console.log(processArray[2].finishTime)
-
-			// console.log(processArray[0].finishTime-processArray[0].arrivalTime)
-			// console.log(processArray[1].finishTime-processArray[1].arrivalTime)
-			// console.log(processArray[2].finishTime-processArray[2].arrivalTime)
-
+			// console.log(processArray[0].finishTime-processArray[0].arrivalTime
 			// console.log(mainOutput)
 			//updates equation
 			Preview.Update();
@@ -610,6 +602,136 @@ $(document).ready(function () {
 		}
 
 	}
+	
+	function findHighestResponseRatioIndex() {
+		var highestRatioIndex = -1;
+		var highestResponseRatio = 0;
+	
+		for (var i = 0; i < processArray.length; i++) {
+			if (processArray[i].done == false && processArray[i].arrivalTime <= position) {
+				var waitingTime = position - processArray[i].arrivalTime;
+				var responseRatio = (waitingTime + processArray[i].burstTime) / processArray[i].burstTime;
+	
+				if (responseRatio > highestResponseRatio) {
+					highestResponseRatio = responseRatio;
+					highestRatioIndex = i;
+				}
+			}
+		}
+	
+		return highestRatioIndex;
+	}
+	
+	function HRRN() {
+		sortArriveTimes();  // Sort processes by arrival time.
+	
+		while (!isDone()) {
+			fillGaps();  // Handle any idle times.
+	
+			var i = findHighestResponseRatioIndex();  // Find the process with the highest response ratio.
+	
+			if (i !== -1) {
+				bar.addItem(processArray[i].processName, processArray[i].burstTime);
+				processArray[i].finished();
+			}
+		}
+	}
+
+
+	function multilevelFeedbackQueue() {
+		var queues = [];
+		var maxLevels = 3; // Define the number of queue levels
+		var initialQuantum = 1; // Initial time quantum for the highest priority queue
+	
+		function initializeQueues() {
+			for (let i = 0; i < maxLevels; i++) {
+				queues.push({
+					processes: [],
+					quantum: initialQuantum * Math.pow(2, i), // Doubling quantum at each lower level
+				});
+			}
+		}
+	
+		function executeQueues() {
+			var currentTime = 0;
+			var nextProcessIndex = 0;
+			processArray.forEach(proc => {
+				proc.started = false; // Ensure all processes are marked not started initially
+			});
+	
+			while (!allQueuesEmpty() || nextProcessIndex < processArray.length) {
+				while (nextProcessIndex < processArray.length && processArray[nextProcessIndex].arrivalTime <= currentTime) {
+					if (!processArray[nextProcessIndex].started) {
+						queues[0].processes.push(processArray[nextProcessIndex]);
+						processArray[nextProcessIndex].started = true; // Mark as started
+					}
+					nextProcessIndex++;
+				}
+	
+				let foundProcessToRun = false;
+				for (let i = 0; i < queues.length; i++) {
+					if (queues[i].processes.length > 0) {
+						let proc = queues[i].processes.shift();
+						let timeSlice = Math.min(proc.burstTime, queues[i].quantum);
+						bar.addItem(proc.processName, timeSlice);
+						proc.burstTime -= timeSlice;
+						currentTime += timeSlice;
+	
+						if (proc.burstTime > 0) {
+							let nextQueueIndex = Math.min(i + 1, maxLevels - 1);
+							queues[nextQueueIndex].processes.push(proc);
+						} else {
+							proc.done = true;
+							proc.finishTime = currentTime;
+							updateOutput(proc);
+						}
+						foundProcessToRun = true;
+						break;
+					}
+				}
+	
+				if (!foundProcessToRun) {
+					currentTime = nextIdleTime(currentTime);
+				}
+			}
+		}
+	
+		function allQueuesEmpty() {
+			return queues.every(queue => queue.processes.length === 0);
+		}
+	
+		function nextIdleTime(currentTime) {
+			let minArrivalTime = Infinity;
+			processArray.forEach(proc => {
+				if (!proc.done && !proc.started && proc.arrivalTime > currentTime) {
+					minArrivalTime = Math.min(minArrivalTime, proc.arrivalTime);
+				}
+			});
+			return minArrivalTime !== Infinity ? minArrivalTime : currentTime;
+		}
+	
+		function updateOutput(proc) {
+			mainOutput.o_pid.push(proc.processName);
+			mainOutput.o_arrivaltime.push(proc.arrivalTime);
+			mainOutput.o_bursttime.push(proc.burstTime);
+			mainOutput.completionTime.push(proc.finishTime);
+			let turnAroundTime = proc.finishTime - proc.arrivalTime;
+			mainOutput.turnAroundTime.push(turnAroundTime);
+			let waitingTime = turnAroundTime - proc.burstTime;
+			mainOutput.waitingTime.push(waitingTime);
+		}
+	
+		initializeQueues();
+		executeQueues();
+	}
+	
+	// // Example to simulate updating the `processArray` with essential properties
+	// processArray.forEach(proc => {
+	// 	proc.started = false; // Indicates if the process has been queued
+	// 	proc.done = false;    // Indicates if the process has completed
+	// 	proc.finishTime = 0;  // When the process finishes
+	// });
+	
 
 	function roundRobin() {
 
@@ -711,7 +833,20 @@ $(document).ready(function () {
 				tq = timeQuantum;
 			}
 
+			else if (algorithm == "HRRN") {
+				$("#algorithm_explanation").text("HRRN will execute each proccess.");
+				console.log("HRRN");
+				HRRN();
+				processTotal = processArray;
+			}
 
+			else if (algorithm == "MLQ") {
+				$("#algorithm_explanation").text("MLQ will be executed here.");
+				console.log("MLQ");
+				multilevelFeedbackQueue();
+				processTotal = processArray;
+				console.log("ALgo executed")
+			}
 
 			if (algorithm == "Priority") {
 				$(".priority").collapse("show");
