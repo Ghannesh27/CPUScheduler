@@ -12,64 +12,7 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="./css/explanation.css">
 
-  <style>
-    .pie {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .chartMenu {
-      flex-direction: column;
-      width: 50vw;
-      height: 40px;
-      color: rgba(255, 26, 104, 1);
-    }
-
-    .chartMenu p {
-      padding: 10px;
-      font-size: 20px;
-      text-align: center;
-    }
-
-    .chartCard {
-      width: 50vw;
-      height: calc(100vh - 100px);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .chartBox {
-      width: 400px;
-      padding: 20px;
-      border-radius: 20px;
-      border: solid 3px rgba(255, 26, 104, 1);
-      background: white;
-      color: black;
-    }
-
-    .barChart {
-      width: 70vw;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 50px;
-      font-weight: bolder;
-      color: black;
-    }
-
-    @media only screen and (max-width:730px){
-      .datavisulization{
-          display: none;
-      }
-  }
-  </style>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
   <script src="./js/bootstrap.min.js"></script>
   <script src="./js/bootstrap-slider.js"></script>
   <link rel="stylesheet" type="text/css" href="./css/cpu-scheduler.css">
@@ -82,13 +25,8 @@
   });
   </script>
 
-  <!-- <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script> -->
   <script type="text/javascript" src="./js/MathJaxSetup.js">
   </script>
-
-  
-
   <title> CPU scheduling</title>
 </head>
 
@@ -111,35 +49,35 @@
         <tr id="row_1" class="collapse in">
           <th> P1</th>
           <td><input id="arrive_1" type="number" class="form-control" min="0" value="0" /></td>
-          <td><input type="number" id="burst_1" class="form-control" min="1" value="5" /></td>
+          <td><input type="number" id="burst_1" class="form-control" min="1" value="3" /></td>
           <td class="priority collapse"><input id="priority_1" type="number" class="form-control" value="1" /></td>
         </tr>
 
         <tr id="row_2" class="collapse in">
           <th> P2 </th>
-          <td><input id="arrive_2" type="number" class="form-control" value="0" /></td>
-          <td><input type="number" id="burst_2" class="form-control" value="2" /></td>
+          <td><input id="arrive_2" type="number" class="form-control" value="2" /></td>
+          <td><input type="number" id="burst_2" class="form-control" value="6" /></td>
           <td class="priority collapse"><input id="priority_2" type="number" class="form-control" value="2" /></td>
         </tr>
 
         <tr id="row_3" class="collapse in">
           <th> P3 </th>
-          <td><input id="arrive_3" type="number" class="form-control" value="0" /></td>
+          <td><input id="arrive_3" type="number" class="form-control" value="4" /></td>
           <td><input id="burst_3" type="number" class="form-control" value="4" /></td>
           <td class="priority collapse"><input id="priority_3" type="number" class="form-control" value="3" /></td>
         </tr>
 
-        <tr id="row_4" class="collapse ">
+        <tr id="row_4" class="collapse in">
           <th> P4 </th>
-          <td><input id="arrive_4" type="number" class="form-control" value="0" /></td>
-          <td><input id="burst_4" type="number" class="form-control" value="1" /></td>
+          <td><input id="arrive_4" type="number" class="form-control" value="6" /></td>
+          <td><input id="burst_4" type="number" class="form-control" value="5" /></td>
           <td class="priority collapse"><input id="priority_4" type="number" class="form-control" value="4" /></td>
         </tr>
 
-        <tr id="row_5" class="collapse">
+        <tr id="row_5" class="collapse in">
           <th> P5 </th>
-          <td><input id="arrive_5" type="number" class="form-control" value="0" /></td>
-          <td><input id="burst_5" type="number" class="form-control" value="1" /></td>
+          <td><input id="arrive_5" type="number" class="form-control" value="8" /></td>
+          <td><input id="burst_5" type="number" class="form-control" value="2" /></td>
           <td class="priority collapse"><input id="priority_5" type="number" class="form-control" value="5" /></td>
         </tr>
 
@@ -225,7 +163,7 @@
                 <span class="glyphicon glyphicon-minus"></span>
               </button>
             </span>
-            <input id="proccess_num" disabled="disabled" class="form-control input-number" value="3">
+            <input id="proccess_num" disabled="disabled" class="form-control input-number" value="5">
             <span class="input-group-btn">
               <button id='add_row' type="button" class="btn btn-default btn-number plusbtn" data-type="plus">
                 <span class="glyphicon glyphicon-plus"></span>

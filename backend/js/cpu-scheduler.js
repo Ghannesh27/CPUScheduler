@@ -49,7 +49,7 @@ $(document).ready(function () {
 	var timeQuantum = 2;
 
 	//the amount of processes, this is used to load in values into processArray
-	var processCount = 3;
+	var processCount = 5;
 
 	//used to keep track of the position
 	var position = 0;
@@ -638,6 +638,279 @@ $(document).ready(function () {
 	}
 
 
+	// function multilevelFeedbackQueue() {
+	// 	var queues = [];
+	// 	var maxLevels = 3; // Define the number of queue levels
+	// 	var initialQuantum = 1; // Initial time quantum for the highest priority queue
+	
+	// 	function initializeQueues() {
+	// 		for (let i = 0; i < maxLevels; i++) {
+	// 			queues.push({
+	// 				processes: [],
+	// 				quantum: initialQuantum * Math.pow(2, i), // Doubling quantum at each lower level
+	// 			});
+	// 		}
+	// 	}
+	
+	// 	function executeQueues() {
+	// 		var currentTime = 0;
+	// 		var nextProcessIndex = 0;
+	// 		processArray.forEach(proc => {
+	// 			proc.started = false; // Ensure all processes are marked not started initially
+	// 		});
+	
+	// 		while (!allQueuesEmpty() || nextProcessIndex < processArray.length) {
+	// 			while (nextProcessIndex < processArray.length && processArray[nextProcessIndex].arrivalTime <= currentTime) {
+	// 				if (!processArray[nextProcessIndex].started) {
+	// 					queues[0].processes.push(processArray[nextProcessIndex]);
+	// 					processArray[nextProcessIndex].started = true; // Mark as started
+	// 				}
+	// 				nextProcessIndex++;
+	// 			}
+	
+	// 			let foundProcessToRun = false;
+	// 			for (let i = 0; i < queues.length; i++) {
+	// 				if (queues[i].processes.length > 0) {
+	// 					let proc = queues[i].processes.shift();
+	// 					let timeSlice = Math.min(proc.burstTime, queues[i].quantum);
+	// 					bar.addItem(proc.processName, timeSlice);
+	// 					proc.burstTime -= timeSlice;
+	// 					currentTime += timeSlice;
+	
+	// 					if (proc.burstTime > 0) {
+	// 						let nextQueueIndex = Math.min(i + 1, maxLevels - 1);
+	// 						queues[nextQueueIndex].processes.push(proc);
+	// 					} else {
+	// 						proc.done = true;
+	// 						proc.finishTime = currentTime;
+	// 						updateOutput(proc);
+	// 					}
+	// 					foundProcessToRun = true;
+	// 					break;
+	// 				}
+	// 			}
+	
+	// 			if (!foundProcessToRun) {
+	// 				currentTime = nextIdleTime(currentTime);
+	// 			}
+	// 		}
+	// 	}
+	
+	// 	function allQueuesEmpty() {
+	// 		return queues.every(queue => queue.processes.length === 0);
+	// 	}
+	
+	// 	function nextIdleTime(currentTime) {
+	// 		let minArrivalTime = Infinity;
+	// 		processArray.forEach(proc => {
+	// 			if (!proc.done && !proc.started && proc.arrivalTime > currentTime) {
+	// 				minArrivalTime = Math.min(minArrivalTime, proc.arrivalTime);
+	// 			}
+	// 		});
+	// 		return minArrivalTime !== Infinity ? minArrivalTime : currentTime;
+	// 	}
+	
+	// 	function updateOutput(proc) {
+	// 		mainOutput.o_pid.push(proc.processName);
+	// 		mainOutput.o_arrivaltime.push(proc.arrivalTime);
+	// 		mainOutput.o_bursttime.push(proc.burstTime);
+	// 		mainOutput.completionTime.push(proc.finishTime);
+	// 		let turnAroundTime = proc.finishTime - proc.arrivalTime;
+	// 		mainOutput.turnAroundTime.push(turnAroundTime);
+	// 		let waitingTime = turnAroundTime - proc.burstTime;
+	// 		mainOutput.waitingTime.push(waitingTime);
+	// 	}
+	
+	// 	initializeQueues();
+	// 	executeQueues();
+	// }
+	
+
+
+// Pre-emptive Multilevel Feedback Queue
+	// function multilevelFeedbackQueue() {
+	// 	var queues = [];
+	// 	var maxLevels = 3; // Define the number of queue levels
+	// 	var initialQuantum = 1; // Initial time quantum for the highest priority queue
+	
+	// 	function initializeQueues() {
+	// 		for (let i = 0; i < maxLevels; i++) {
+	// 			queues.push({
+	// 				processes: [],
+	// 				quantum: initialQuantum * Math.pow(2, i) // Doubling quantum at each lower level
+	// 			});
+	// 		}
+	// 	}
+	
+	// 	function executeQueues() {
+	// 		var currentTime = 0;
+	// 		var nextProcessIndex = 0;
+	// 		processArray.forEach(proc => {
+	// 			proc.started = false;
+	// 			proc.done = false;
+	// 		});
+	
+	// 		while (!allQueuesEmpty() || nextProcessIndex < processArray.length) {
+	// 			// Check and enqueue any new arrivals
+	// 			while (nextProcessIndex < processArray.length && processArray[nextProcessIndex].arrivalTime <= currentTime) {
+	// 				let proc = processArray[nextProcessIndex];
+	// 				queues[0].processes.push(proc); // New arrivals always start in the highest priority queue
+	// 				proc.started = true;
+	// 				nextProcessIndex++;
+	// 			}
+	
+	// 			// Find the highest priority non-empty queue
+	// 			let foundProcess = false;
+	// 			for (let i = 0; i < queues.length && !foundProcess; i++) {
+	// 				if (queues[i].processes.length > 0) {
+	// 					let proc = queues[i].processes.shift();
+	// 					let timeSlice = Math.min(proc.burstTime, queues[i].quantum);
+	// 					let nextArrivalTime = nextProcessIndex < processArray.length ? processArray[nextProcessIndex].arrivalTime : Infinity;
+	// 					let executionTime = Math.min(timeSlice, nextArrivalTime - currentTime); // Adjust time slice if new process arrives mid-execution
+	
+	// 					bar.addItem(proc.processName, executionTime, currentTime);
+	// 					proc.burstTime -= executionTime;
+	// 					currentTime += executionTime;
+	
+	// 					// If the process has remaining time and was not interrupted by a new arrival
+	// 					if (proc.burstTime > 0 && currentTime < nextArrivalTime) {
+	// 						let nextQueueLevel = Math.min(i + 1, maxLevels - 1);
+	// 						queues[nextQueueLevel].processes.push(proc);
+	// 					} else if (proc.burstTime > 0) {
+	// 						// Reinsert the process at the front of the same queue if it was preempted by an arrival
+	// 						queues[i].processes.unshift(proc);
+	// 					} else {
+	// 						proc.done = true; // Mark the process as completed
+	// 						updateOutput(proc, currentTime);
+	// 					}
+	
+	// 					foundProcess = true;
+	// 				}
+	// 			}
+	
+	// 			if (!foundProcess) { // If no process was executed, advance time to the next process arrival
+	// 				currentTime = nextArrivalTime;
+	// 			}
+	// 		}
+	// 	}
+	
+	// 	function allQueuesEmpty() {
+	// 		return queues.every(queue => queue.processes.length === 0);
+	// 	}
+	
+	// 	function updateOutput(proc, finishTime) {
+	// 		proc.finishTime = finishTime;
+	// 		// Additional output handling code here
+	// 	}
+	
+	// 	initializeQueues();
+	// 	executeQueues();
+	// }
+
+
+	
+	// function multilevelFeedbackQueue() {
+	// 	var queues = [];
+	// 	var maxLevels = 3; // Define the number of queue levels
+	// 	var initialQuantum = 1; // Initial time quantum for the highest priority queue
+	
+	// 	function initializeQueues() {
+	// 		for (let i = 0; i < maxLevels; i++) {
+	// 			queues.push({
+	// 				processes: [],
+	// 				quantum: initialQuantum * Math.pow(2, i) // Doubling quantum at each lower level
+	// 			});
+	// 		}
+	// 	}
+	
+	// 	function executeQueues() {
+	// 		var currentTime = 0;
+	// 		var nextProcessIndex = 0;
+	// 		processArray.forEach(proc => {
+	// 			proc.started = false;
+	// 			proc.done = false;
+	// 		});
+	
+	// 		while (!allProcessesComplete()) {
+	// 			// Enqueue any new arrivals
+	// 			while (nextProcessIndex < processArray.length && processArray[nextProcessIndex].arrivalTime <= currentTime) {
+	// 				let proc = processArray[nextProcessIndex];
+	// 				queues[0].processes.push(proc); // Start new arrivals in the highest priority queue
+	// 				proc.started = true;
+	// 				nextProcessIndex++;
+	// 			}
+	
+	// 			let executed = false;
+	// 			for (let i = 0; i < queues.length && !executed; i++) {
+	// 				if (queues[i].processes.length > 0) {
+	// 					let proc = queues[i].processes.shift();
+	// 					let timeSlice = Math.min(proc.burstTime, queues[i].quantum);
+	// 					let nextArrivalTime = nextProcessIndex < processArray.length ? processArray[nextProcessIndex].arrivalTime : Infinity;
+						
+	// 					bar.addItem(proc.processName, timeSlice, currentTime); // Simulate process execution
+	// 					proc.burstTime -= timeSlice;
+	// 					currentTime += timeSlice;
+
+	// 					var lengthOfQueue1 = queues[0].processes.length;
+	// 					var lengthOfQueue2 = queues[1].processes.length;
+	// 					var lengthOfQueue3 = queues[2].processes.length;
+	// 					var sums = lengthOfQueue1 + lengthOfQueue2 + lengthOfQueue3;
+	
+	// 					if (proc.burstTime > 0 && currentTime < nextArrivalTime && sums == 0) {
+
+
+	// 						console.log(proc.processName,"Sum:", sums);
+	// 						// Determine the next queue level, making sure it exists
+	// 						queues[i].processes.push(proc);
+							
+	// 					} 
+	// 					else if (proc.burstTime > 0) {
+	// 						 // Reinsert the process at the end of the same queue
+	// 						let nextQueueLevel = i + 1 < queues.length ? i + 1 : i;
+	// 						queues[nextQueueLevel].processes.push(proc);
+	// 					}
+						
+	// 					else {
+	// 						proc.done = true; // Mark the process as completed
+	// 						updateOutput(proc, currentTime);
+	// 					}
+	
+	// 					executed = true;
+	// 				}
+	// 			}
+	
+	// 			if (!executed) {
+	// 				// If no process was executed and there are more arrivals, advance to the next arrival time
+	// 				currentTime = nextProcessIndex < processArray.length ? processArray[nextProcessIndex].arrivalTime : currentTime;
+	// 			}
+	// 		}
+	// 	}
+	
+	// 	function allProcessesComplete() {
+	// 		return processArray.every(proc => proc.done);
+	// 	}
+	
+	// 	function barAddItem(processName, timeSlice, currentTime) {
+	// 		// This would implement actual visual or logging logic for the bar
+	// 		console.log(`${processName} runs from ${currentTime} to ${currentTime + timeSlice}`);
+	// 	}
+	
+	// function updateOutput(proc) {
+	// 	mainOutput.o_pid.push(proc.processName);
+	// 	mainOutput.o_arrivaltime.push(proc.arrivalTime);
+	// 	mainOutput.o_bursttime.push(proc.burstTime);
+	// 	mainOutput.completionTime.push(proc.finishTime);
+	// 	let turnAroundTime = proc.finishTime - proc.arrivalTime;
+	// 	mainOutput.turnAroundTime.push(turnAroundTime);
+	// 	let waitingTime = turnAroundTime - proc.burstTime;
+	// 	mainOutput.waitingTime.push(waitingTime);
+	// }
+	
+	// 	initializeQueues();
+	// 	executeQueues();
+	// }
+	
+
 	function multilevelFeedbackQueue() {
 		var queues = [];
 		var maxLevels = 3; // Define the number of queue levels
@@ -647,7 +920,7 @@ $(document).ready(function () {
 			for (let i = 0; i < maxLevels; i++) {
 				queues.push({
 					processes: [],
-					quantum: initialQuantum * Math.pow(2, i), // Doubling quantum at each lower level
+					quantum: initialQuantum * Math.pow(2, i) // Doubling quantum at each lower level
 				});
 			}
 		}
@@ -656,90 +929,94 @@ $(document).ready(function () {
 			var currentTime = 0;
 			var nextProcessIndex = 0;
 			processArray.forEach(proc => {
-				proc.started = false; // Ensure all processes are marked not started initially
+				proc.started = false;
+				proc.done = false;
+				proc.initialBurstTime = proc.burstTime;
 			});
 	
-			while (!allQueuesEmpty() || nextProcessIndex < processArray.length) {
+			while (!allProcessesComplete()) {
+				// Enqueue any new arrivals
 				while (nextProcessIndex < processArray.length && processArray[nextProcessIndex].arrivalTime <= currentTime) {
-					if (!processArray[nextProcessIndex].started) {
-						queues[0].processes.push(processArray[nextProcessIndex]);
-						processArray[nextProcessIndex].started = true; // Mark as started
-					}
+					let proc = processArray[nextProcessIndex];
+					queues[0].processes.push(proc); // Start new arrivals in the highest priority queue
+					proc.started = true;
 					nextProcessIndex++;
 				}
 	
-				let foundProcessToRun = false;
-				for (let i = 0; i < queues.length; i++) {
+				let executed = false;
+				for (let i = 0; i < queues.length && !executed; i++) {
 					if (queues[i].processes.length > 0) {
 						let proc = queues[i].processes.shift();
 						let timeSlice = Math.min(proc.burstTime, queues[i].quantum);
-						bar.addItem(proc.processName, timeSlice);
+						let nextArrivalTime = nextProcessIndex < processArray.length ? processArray[nextProcessIndex].arrivalTime : Infinity;
+						
+						bar.addItem(proc.processName, timeSlice, currentTime); // Simulate process execution
 						proc.burstTime -= timeSlice;
 						currentTime += timeSlice;
 	
-						if (proc.burstTime > 0) {
-							let nextQueueIndex = Math.min(i + 1, maxLevels - 1);
-							queues[nextQueueIndex].processes.push(proc);
-						} else {
-							proc.done = true;
-							proc.finishTime = currentTime;
-							updateOutput(proc);
+						var lengthOfQueue1 = queues[0].processes.length;
+						var lengthOfQueue2 = queues[1].processes.length;
+						var lengthOfQueue3 = queues[2].processes.length;
+						var sums = lengthOfQueue1 + lengthOfQueue2 + lengthOfQueue3;
+	
+						if (proc.burstTime > 0 && currentTime < nextArrivalTime && sums == 0) {
+
+
+							console.log(proc.processName,"Sum:", sums);
+							// Determine the next queue level, making sure it exists
+							queues[i].processes.push(proc);
+							
+						} 
+						else if (proc.burstTime > 0) {
+							 // Reinsert the process at the end of the same queue
+							let nextQueueLevel = i + 1 < queues.length ? i + 1 : i;
+							queues[nextQueueLevel].processes.push(proc);
 						}
-						foundProcessToRun = true;
-						break;
+						
+						else {
+							proc.done = true; // Mark the process as completed
+							updateOutput(proc, currentTime);
+						}
+	
+						executed = true;
 					}
 				}
 	
-				if (!foundProcessToRun) {
-					currentTime = nextIdleTime(currentTime);
+				if (!executed) {
+					// If no process was executed, advance to the next process arrival
+					currentTime = nextProcessIndex < processArray.length ? processArray[nextProcessIndex].arrivalTime : currentTime;
 				}
 			}
 		}
 	
-		function allQueuesEmpty() {
-			return queues.every(queue => queue.processes.length === 0);
+		function allProcessesComplete() {
+			return processArray.every(proc => proc.done);
 		}
 	
-		function nextIdleTime(currentTime) {
-			let minArrivalTime = Infinity;
-			processArray.forEach(proc => {
-				if (!proc.done && !proc.started && proc.arrivalTime > currentTime) {
-					minArrivalTime = Math.min(minArrivalTime, proc.arrivalTime);
-				}
-			});
-			return minArrivalTime !== Infinity ? minArrivalTime : currentTime;
-		}
+		function updateOutput(proc, finishTime) {
+			proc.burstTime = proc.initialBurstTime;
+			proc.finishTime = finishTime;
+			proc.turnAroundTime = proc.finishTime - proc.arrivalTime;
+			proc.waitingTime = proc.turnAroundTime - proc.initialBurstTime;
+			
 	
-		function updateOutput(proc) {
-			mainOutput.o_pid.push(proc.processName);
-			mainOutput.o_arrivaltime.push(proc.arrivalTime);
-			mainOutput.o_bursttime.push(proc.burstTime);
-			mainOutput.completionTime.push(proc.finishTime);
-			let turnAroundTime = proc.finishTime - proc.arrivalTime;
-			mainOutput.turnAroundTime.push(turnAroundTime);
-			let waitingTime = turnAroundTime - proc.burstTime;
-			mainOutput.waitingTime.push(waitingTime);
+			console.log(`Process ${proc.processName} completed at time ${finishTime}`);
+			console.log(`Turnaround time for ${proc.processName}: ${proc.turnAroundTime}`);
+			console.log(`Waiting time for ${proc.processName}: ${proc.waitingTime}`);
 		}
 	
 		initializeQueues();
 		executeQueues();
 	}
 	
-	// // Example to simulate updating the `processArray` with essential properties
-	// processArray.forEach(proc => {
-	// 	proc.started = false; // Indicates if the process has been queued
-	// 	proc.done = false;    // Indicates if the process has completed
-	// 	proc.finishTime = 0;  // When the process finishes
-	// });
+	function barAddItem(processName, timeSlice, currentTime) {
+		console.log(`${processName} runs from ${currentTime} to ${currentTime + timeSlice}`);
+	}
+	
 	
 
 	function roundRobin() {
-
-
 		function findNextJump(index) {
-
-
-
 			while (true) {
 
 				if (processArray[index].burstTime <= timeQuantum
@@ -760,38 +1037,103 @@ $(document).ready(function () {
 					// console.log("switched to:"+processArray[index].processName);
 					processArray[index].burstTime -= timeQuantum;
 					bar.addItem(processArray[index].processName, timeQuantum);
-
-
-
-
 				}
-
 				index = (index + 1) % processArray.length
-
-
-
-
 			}
-
-
-
-
 		}
 
 		var i = 0;
 
 		sortArriveTimes();
 		while (isDone() == false) {
-
 			fillGaps();
-
-			// console.log("starting:"+processArray[i].processName);
-
 			i = findNextJump(i);
-
 		}
 	}
 
+
+
+	function roundRobin() {
+		let currentTime = 0; // Current time in the simulation
+		let processQueue = []; // Queue to manage the round-robin execution
+	
+		// Initialize processes with 'started' flag and 'done' flags
+		processArray.forEach(process => {
+			process.started = false;
+			process.done = false;
+			process.remainingBurst = process.burstTime;
+		});
+	
+		// Function to enqueue processes that have arrived
+		function enqueueArrivedProcesses() {
+			processArray.forEach(process => {
+				if (!process.started && process.arrivalTime <= currentTime) {
+					processQueue.push(process);
+					process.started = true;
+				}
+			});
+		}
+	
+		// Main execution loop
+		while (!isDone()) {
+			enqueueArrivedProcesses();
+	
+			if (processQueue.length > 0) {
+				let process = processQueue.shift(); // Dequeue the next process
+				let timeSlice = Math.min(process.remainingBurst, timeQuantum);
+				bar.addItem(process.processName, timeSlice);
+				process.remainingBurst -= timeSlice;
+				currentTime += timeSlice;
+	
+				if (process.remainingBurst > 0) {
+					enqueueArrivedProcesses(); // Re-check for new arrivals before potentially re-queuing
+					processQueue.push(process); // Re-queue the process if not done
+				} else {
+					process.done = true;
+					process.finishTime = currentTime; // Capture the finish time
+					updateOutput(process);
+				}
+			} else {
+				// If no process is ready and not all are done, move time forward to the next process arrival
+				let nextArrival = findNextArrivalTime(currentTime);
+				if (nextArrival > currentTime) {
+					bar.addItem("idle", nextArrival - currentTime);
+					currentTime = nextArrival; // Advance time
+				}
+			}
+		}
+	}
+	
+	// Find the next time when a new process arrives
+	function findNextArrivalTime(currentTime) {
+		let nextArrival = Infinity;
+		processArray.forEach(process => {
+			if (!process.started && process.arrivalTime > currentTime) {
+				nextArrival = Math.min(nextArrival, process.arrivalTime);
+			}
+		});
+		return nextArrival;
+	}
+	
+	// Check if all processes are completed
+	function isDone() {
+		return processArray.every(process => process.done);
+	}
+	
+	// Update output for the process
+	function updateOutput(process) {
+		mainOutput.o_pid.push(process.processName);
+		mainOutput.o_arrivaltime.push(process.arrivalTime);
+		mainOutput.o_bursttime.push(process.burstTime);
+		mainOutput.completionTime.push(process.finishTime);
+		let tat = process.finishTime - process.arrivalTime;
+		mainOutput.turnAroundTime.push(tat);
+		let waitTime = tat - process.burstTime;
+		mainOutput.waitingTime.push(waitTime);
+	}
+	
+	
+	
 
 	function run() {
 		loadValues();
