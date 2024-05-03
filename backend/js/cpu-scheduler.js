@@ -62,20 +62,6 @@ $(document).ready(function () {
 
 	setTimeout(function () { run() }, 200);
 
-
-
-	//used for debugging
-	// function printArray(){
-	// 	ole.log("Printing array");
-	// 	for (var i =0; i< processArray.length; i++) {
-	// 		console.log(processArray[i].processName);
-	// 		console.log(processArray[i].burstTime);
-	// 		console.log(processArray[i].arrivalTime);
-	// 	};cons
-	// }
-
-
-	//used for SJF and SRJF, finds the index of the next available smallest job
 	function findSmallestBurstIndex() {
 		var smallestIndex = 0;
 		var smallestBurst = 0;
@@ -1176,14 +1162,15 @@ $(document).ready(function () {
 			}
 
 			else if (algorithm == "HRRN") {
-				$("#algorithm_explanation").text("HRRN will execute each proccess.");
+				$("#algorithm_explanation").text("HRRN is a non-preemptive algorithm in which, the scheduling is done on the basis of Response Ratio");
 				console.log("HRRN");
 				HRRN();
 				processTotal = processArray;
 			}
 
 			else if (algorithm == "MLQ") {
-				$("#algorithm_explanation").text("MLQ will be executed here.");
+				$("#algorithm_explanation").text("MLFQ optimizes resource utilization by dynamically adjusting priorities and utilizing multiple queues");
+
 				console.log("MLQ");
 				multilevelFeedbackQueue();
 				processTotal = processArray;
@@ -1250,8 +1237,6 @@ $(document).ready(function () {
 			var len = Number(itemAmount) || 0;
 
 
-			// add text
-
 			var item = $(document.createElement("li"));
 			$(item).addClass("zero");
 			ruler.append(item.text(0));
@@ -1274,18 +1259,6 @@ $(document).ready(function () {
 
 	}
 
-	function storeValue() {
-
-
-
-	};
-
-
-	/*
-	****************************************************************
-						All the click event listeners
-	****************************************************************
-	*/
 
 	$('#add_row').click(function () {
 		processCount++;
@@ -1475,155 +1448,6 @@ $(".runButton").click(function () {
 	}
 
 
-	//Section for the Bar chart...
-	const myBarChart = new Chart(
-		document.getElementById('myBarChart'), {
-		type: 'bar',
-		data: {
-			labels: mainOutput.o_pid,
-			datasets: [{
-				label: 'burst time',
-				data: mainOutput.o_bursttime,
-				backgroundColor: [
-					'#58508d',
-				],
-				borderColor: [
-					'rgba(176,162,247,1)',
-				],
-				borderWidth: 1
-			},
-			{
-				label: 'Waiting Time',
-				data: mainOutput.waitingTime,
-				backgroundColor: [
-					'#ff6361',
-				],
-				borderColor: [
-					'rgba(176,162,247,1)',
-				],
-				borderWidth: 1
-			},
-			{
-				label: 'turn around time',
-				data: mainOutput.turnAroundTime,
-				backgroundColor: [
-					'#ffa600',
-				],
-				borderColor: [
-					'rgba(176,162,247,1)',
-				],
-				borderWidth: 1
-			}
-			]
-		},
-		options: {
-			scales: {
-				y: {
-					beginAtZero: true
-				}
-			}
-		},
-	}
-	);
-
-	//........................................................Section : 3(IV) : Code for displaying pie chart.........................................
-	// section for the pie chart for Waiting time...
-	const myChart = new Chart(
-		document.getElementById('myChart'), {
-		type: 'pie',
-		data: {
-			labels: mainOutput.o_pid,
-			datasets: [{
-				label: 'Waiting Time',
-				data: mainOutput.waitingTime,
-				backgroundColor: [
-					'#003f5c',
-					'#58508d',
-					'#ff6361',
-					'#ffa600',
-					'#77C2FE',
-					'#bc5090',
-					'#0b9a8d',
-					'#E65F8E',
-					'#323B81',
-					'#9c2162',
-
-				],
-				borderColor: [
-					'rgba(176,162,247,1)',
-					'rgba(55,227,128,1)',
-					'rgba(255, 26, 104, 1)',
-					'rgba(0,207,255,1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)',
-					'rgba(0, 0, 0, 1)',
-				],
-				borderWidth: 1
-			}]
-		},
-		options: {
-			plugins: {
-				datalabels: {
-					color: 'white',
-				}
-			}
-		},
-		plugins: [ChartDataLabels],
-	}
-	);
-
-
-	// section for the pie chart for Turn around time...
-	const mytatChart = new Chart(
-		document.getElementById('mytatChart'), {
-		type: 'pie',
-		data: {
-			labels: mainOutput.o_pid,
-			datasets: [{
-				label: 'Turn around Time',
-				data: mainOutput.turnAroundTime,
-				backgroundColor: [
-					'#003f5c',
-					'#58508d',
-					'#ff6361',
-					'#ffa600',
-					'#77C2FE',
-					'#bc5090',
-					'#0b9a8d',
-					'#E65F8E',
-					'#323B81',
-					'#9c2162',
-				],
-				borderColor: [
-					'rgba(176,162,247,1)',
-					'rgba(55,227,128,1)',
-					'rgba(255, 26, 104, 1)',
-					'rgba(0,207,255,1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)',
-					'rgba(0, 0, 0, 1)',
-				],
-				borderWidth: 1
-			}]
-		},
-		options: {
-			plugins: {
-				datalabels: {
-					color: 'white',
-				}
-			}
-		},
-		plugins: [ChartDataLabels],
-	}
-	);
-
-
 	let cpuUtilization = document.getElementById("utilization");
 	cpuUtilization.innerHTML = `${mainOutput.utilization}%`;
 
@@ -1632,46 +1456,6 @@ $(".runButton").click(function () {
 
 	let avgtat = document.getElementById("avgtat");
 	avgtat.innerHTML = mainOutput.avgtat;
-
-
-});
-
-
-
-var explain = document.getElementById('ex');
-explain.style.display = "none";
-
-$("#explanation").click(function (){
-
-	explain.style.display = "block";
-
-	var inputdata = document.getElementById('input');
-	var steps = document.getElementById('steps');
-
-	inputdata.innerHTML += '  <span>Process Id :  '+ mainOutput.o_pid
-	+'</span></br><span>Arrival Time : '+ mainOutput.o_arrivaltime +'</span></br><span>Burst Time :  '+ mainOutput.o_bursttime +'</sp>';
-
-	steps.innerHTML += '<span><span class="step">Step 1 </span> : Sort all Process using Arrival Time </span></br><span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Arrival Time : '+ mainOutput.o_arrivaltime.sort(function(a,b){return a-b}) +'</span>';
-
-	if(Selectedalgorithm == 'FCFS'){
-		steps.innerHTML += '</br></br><span><span class="step">Step 2 </span> : Arrival Time Sorting is done. Now Processes will be scheduled as per thier arrival time.</span></br></br><span><span class="step">Step 3 </span> : Now We will calculate Turn around Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp TurnAround Time = Completion Time - Arrival Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTurnaround Time : '+ mainOutput.turnAroundTime +'</span></br></br> <span><span class="step">Step 4 </span> : Now We will calculate Waiting Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time = Turn around Time - Burst Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time : '+ mainOutput.waitingTime +'</span>';
-	}
-
-	else if(Selectedalgorithm == 'SJF'){
-		steps.innerHTML += '</br></br><span><span class="step">Step 2 </span>: Arrival Time Sorting is done. Now We will sort the processes according to thier burst time to select Shortest Job first</span></br><span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Burst Time : '+ mainOutput.o_bursttime.sort(function(a,b){return a-b}) + '</span>' +  '</br></br><span> <span class="step">Step 3 </span>: Burst time sorting is done. Now processes will be scheduled as per thier burst time. Now We will calculate Turn around Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp TurnAround Time = Completion Time - Arrival Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTurnaround Time : '+ mainOutput.turnAroundTime +'</span></br></br> <span><span class="step">Step 4 </span> : Now We will calculate Waiting Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time = Turn around Time - Burst Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time : '+ mainOutput.waitingTime +'</span>';
-	}
-
-	else if(Selectedalgorithm == 'Priority'){
-		steps.innerHTML += '</br></br><span><span class="step">Step 2 </span> : Arrival Time Sorting is done. Now We will sort the processes according to thier Priority to select highest priority process first.</span></br><span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Priority : '+ mainOutput.o_priority.sort(function(a,b){return a-b}) + '</span>' +  '</br></br><span><span class="step">Step 3 </span> :  Sorting is done for priority. Now processes will be scheduled as per thier priority. Now We will calculate Turn around Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp TurnAround Time = Completion Time - Arrival Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTurnaround Time : '+ mainOutput.turnAroundTime +'</span></br></br> <span><span class="step">Step 4 </span> : Now We will calculate Waiting Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time = Turn around Time - Burst Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time : '+ mainOutput.waitingTime +'</span>';
-	}
-
-	else if(Selectedalgorithm == 'Round Robin'){
-		steps.innerHTML += '</br></br><span><span class="step">Step 2 </span> : Arrival Time Sorting is done. Now We will select the process one by one and allocate cpu to the process for selected time which is equals to Time Quantum.</br> Here Time Quantum is :  '+ mainOutput.quantum + '</br></br><span class="step">Step 3 </span>: Processes will get cpu like this :</br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp P1 -> '+mainOutput.quantum + '  || P2 -> '+mainOutput.quantum +'  || P3 -> '+mainOutput.quantum +' and so on....'+'</br></br><span><span class="step">Step 4 </span> : Now We will calculate Turn around Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp TurnAround Time = Completion Time - Arrival Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTurnaround Time : '+ mainOutput.turnAroundTime +'</span></br></br> <span><span class="step">Step 5 </span> : Now We will calculate Waiting Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time = Turn around Time - Burst Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time : '+ mainOutput.waitingTime +'</span>';
-	}
-
-	else if(Selectedalgorithm == 'SRJF'){
-		steps.innerHTML += '</br></br><span><span class="step">Step 2 </span> : Arrival Time Sorting is done. Now We will sort the processes according to thier burst time to select Shortest Job first</span></br><span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Burst Time : '+ mainOutput.o_bursttime.sort(function(a,b){return a-b}) + '</span>' +  '</br></br><span><span class="step">Step 3 </span> : Here We are checking the burst time after each unit of time. If we find any process which has less burst time than current process then we allocate the cpu to that process.</br></br><span class="step">Step 4 </span> : Now We will calculate Turn around Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp TurnAround Time = Completion Time - Arrival Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTurnaround Time : '+ mainOutput.turnAroundTime +'</span></br></br> <span><span class="step">Step 5 </span> : Now We will calculate Waiting Time. We know that, </br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time = Turn around Time - Burst Time</span></br><span></br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp So,</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Waiting Time : '+ mainOutput.waitingTime +'</span>';
-	}
 
 
 });

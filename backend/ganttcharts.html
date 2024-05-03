@@ -10,7 +10,6 @@
 
   <link rel="stylesheet" type="text/css" href="./css/bootstrap-simplex.css">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="./css/explanation.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="./js/bootstrap.min.js"></script>
@@ -152,7 +151,7 @@
           <p style="margin-top:15px;" id="algorithm_explanation">
           </p>
 
-        </div><!-- /column -->
+        </div>
         <div class="col-md-4">
           <div>
             <label>Number of Processes:</label>
@@ -216,7 +215,7 @@
 
 
 
-        </div><!-- /column -->
+        </div>
 
 
         <div style="display: block; text-align: center;">
@@ -229,16 +228,9 @@
           <button onclick=(location.reload()) class="runButton">Reset</button>
         </div>
 
-        <!-- <div class="col-md-4" style="margin-top:20px;">
+      </div>
 
-  </div> -->
-
-        <!-- /column -->
-
-
-      </div><!-- /row -->
-
-    </div><!-- /well -->
+    </div>
 
 
 
@@ -250,8 +242,6 @@
 
     <hr color="#001d2c" style="margin-top: 35px;">
 
-    <!-- <div id="outputDiv"></div> -->
-
     <h1 style="text-align: center;">Output Table</h1>
     <hr>
 
@@ -261,7 +251,6 @@
           <th style="background-color: #9adcff;">Process:</th>
           <th style="background-color: #9ADCFF;">Arrival Time:</th>
           <th style="background-color: #9ADCFF;">Burst Time:</th>
-          <!-- <th class="priority collapse">Priority:</th> -->
           <th style="background-color: #9ADCFF;">Completion Time: </th>
           <th style="background-color: #9ADCFF;">Turn around Time: </th>
           <th style="background-color: #9ADCFF;">Waiting Time: </th>
@@ -283,25 +272,16 @@
     
     <div class="pie" id="chartdiv">
       <div class="first">
-        <div class="chartMenu">
-          <p>Waiting Time Chart</p>
-        </div>
         <div class="chartCard">
           <div class="chartBox">
-            <canvas id="myChart" width="400" height="400"></canvas>
           </div>
         </div>
 
 
       </div>
       <div class="second">
-        <div class="chartMenu">
-          <p>Turn around Time Chart</p>
-        </div>
         <div class="chartCard">
           <div class="chartBox">
-            <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
-            <canvas id="mytatChart" width="400" height="400"></canvas>
           </div>
         </div>
 
@@ -311,31 +291,14 @@
 
 
 
-
-
-
-  </div><!-- /containter -->
+  </div>
   
-  <!-- <script src="js/new.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js"
     integrity="sha512-R/QOHLpV1Ggq22vfDAWYOaMd5RopHrJNMxi8/lJu8Oihwi4Ho4BRFeiMiCefn9rasajKjnx9/fTQ/xkWnkDACg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="./js/cpu-scheduler.js"> </script>
-  
-
-  <script>
-    var navLinks = document.getElementById("navLinks");
-    function showMenu() {
-      navLinks.style.right = "0";
-    }
-
-    function hideMenu() {
-      navLinks.style.right = "-200px";
-    }
-
-  </script>
 
 </body>
 
