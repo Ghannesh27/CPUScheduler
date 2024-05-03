@@ -1,9 +1,4 @@
 
-/**
- * Bridget makes jQuery widgets
- * v1.0.1
- * MIT license
- */
 
 (function(root, factory) {
 	if(typeof define === "function" && define.amd) {
